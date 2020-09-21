@@ -1,1 +1,1 @@
-docker-machine rm -y Aiur
+docker-machine -s "/Users/rkina/goinfre/.docker/machine" rm -y Aiur

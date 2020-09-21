@@ -1,1 +1,1 @@
-docker-machine ip Char
+docker-machine -s "/Users/rkina/goinfre/.docker/machine" ip Char
