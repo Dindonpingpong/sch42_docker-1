@@ -1,1 +1,1 @@
-docker-machine -s "/Users/rkina/goinfre/.docker/machine"create --driver virtualbox Aiur
+docker-machine -s "/Users/rkina/goinfre/.docker/machine" create --driver virtualbox Aiur

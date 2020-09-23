@@ -1,37 +1,42 @@
 version: '3'
 
 services:
-  apache:
-    image: httpd:2.4
-    volumes:
-      - ./src:/var/www/html
-      - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
-    depends_on:
-      - php
-
-  nginx:
-    image: nginx:1.13
-    ports:
-      - 80:80
-    volumes:
-      - ./src:/var/www/html
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - apache
-
-  php:
-    build:
-      ./php
-    volumes:
-      - ./src:/var/www/html
-      - ./php/php.ini:/usr/local/etc/php/php.ini
-    depends_on:
-      - mariadb
-
-  mariadb:
-    image: mariadb:10.3
-    volumes:
-      - ./mariadb:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: qwerty
-      
+    www:
+        build: src/php
+        ports: 
+            - "8080:80"
+        volumes:
+            - ./src/camagru:/var/www/html/
+        links:
+            - db
+        networks:
+            - default
+    db:
+        image: mysql:8.0
+        ports: 
+            - "3306:3306"
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: camagru
+            MYSQL_USER: super
+            MYSQL_PASSWORD: 1234
+            MYSQL_ROOT_PASSWORD: wwqfd
+        volumes:
+            - ./mysql:/docker-entrypoint-initdb.d
+            - ./conf:/etc/mysql/conf.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+            
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - db:db
+        ports:
+            - 8000:80
+        environment:
+            MYSQL_USER: super
+            MYSQL_PASSWORD: 1234
+            MYSQL_ROOT_PASSWORD: wwqfd
+volumes:
+    persistent:
